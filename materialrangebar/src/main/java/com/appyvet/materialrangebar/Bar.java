@@ -455,7 +455,7 @@ public class Bar {
             yPos = mY + labelBounds.height() + pinRadius + mBottomLabelsMaring;
         }
 
-        mLabelPaint.setTypeface(Typeface.createFromAsset(ctx.getAssets(), "prometo_medium_regular.ttf"));
+        mLabelPaint.setTypeface(ResourcesCompat.getFont(ctx, R.font.prometo_medium_regular));
 
         canvas.drawText(label, xPos, yPos, mLabelPaint);
     }
