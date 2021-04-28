@@ -70,6 +70,8 @@ public class RangeBar extends View {
 
     private static final float DEFAULT_TICK_INTERVAL = 1;
 
+    private static final float DEFAULT_BOTTOM_LABEL_MARGIN = 0;
+
     private static final float DEFAULT_MIN_DISTANCE = -1;
 
     private static final float DEFAULT_TICK_HEIGHT_DP = 1;
@@ -125,6 +127,8 @@ public class RangeBar extends View {
     private int mMinIndexDistance = 0;
 
     private float mDesiredMinDistance = -1f;
+
+    private float mBottomLabelsMargin = 0f;
 
     private float mBarWeight = DEFAULT_BAR_WEIGHT_DP;
 
@@ -297,6 +301,7 @@ public class RangeBar extends View {
         bundle.putFloat("TICK_START", mTickStart);
         bundle.putFloat("TICK_END", mTickEnd);
         bundle.putFloat("TICK_INTERVAL", mTickInterval);
+        bundle.putFloat("BOTTOM_LABELS_MARGIN", mBottomLabelsMargin);
         bundle.putInt("TICK_COLOR", mTickDefaultColor);
         bundle.putIntegerArrayList("TICK_COLORS", mTickColors);
         bundle.putInt("TICK_LABEL_COLOR", mTickLabelColor);
@@ -348,6 +353,7 @@ public class RangeBar extends View {
             mTickStart = bundle.getFloat("TICK_START");
             mTickEnd = bundle.getFloat("TICK_END");
             mTickInterval = bundle.getFloat("TICK_INTERVAL");
+            mBottomLabelsMargin = bundle.getFloat("BOTTOM_LABELS_MARGIN");
             mTickDefaultColor = bundle.getInt("TICK_COLOR");
             mTickColors = bundle.getIntegerArrayList("TICK_COLORS");
             mTickLabelColor = bundle.getInt("TICK_LABEL_COLOR");
@@ -457,7 +463,7 @@ public class RangeBar extends View {
 
         mBar = new Bar(ctx, marginLeft, yPos, barLength, mTickCount, mTickHeight, mTickDefaultColor, mTickColors,
                 mBarWeight, mBarColor, mIsBarRounded, mTickLabelColor, mTickLabelSelectedColor,
-                mTickTopLabels, mTickBottomLabels, mTickDefaultLabel, mTickLabelSize);
+                mTickTopLabels, mTickBottomLabels, mTickDefaultLabel, mTickLabelSize, mBottomLabelsMargin);
 
         // Initialize thumbs to the desired indices
         if (mIsRangeBar) {
@@ -502,13 +508,13 @@ public class RangeBar extends View {
         if (mIsRangeBar) {
             mConnectingLine.draw(canvas, mLeftThumb, mRightThumb);
             if (drawTicks) {
-                mBar.drawTicks(canvas, mExpandedPinRadius, mRightThumb, mLeftThumb);
+                mBar.drawTicks(canvas, mExpandedPinRadius, mRightThumb, mLeftThumb, getContext());
             }
             mLeftThumb.draw(canvas);
         } else {
             mConnectingLine.draw(canvas, getMarginLeft(), mRightThumb);
             if (drawTicks) {
-                mBar.drawTicks(canvas, mExpandedPinRadius, mRightThumb);
+                mBar.drawTicks(canvas, mExpandedPinRadius, mRightThumb, getContext());
             }
         }
         mRightThumb.draw(canvas);
@@ -1366,6 +1372,8 @@ public class RangeBar extends View {
                     .getFloat(R.styleable.RangeBar_mrb_tickInterval, DEFAULT_TICK_INTERVAL);
             final float minDistance = ta
                     .getFloat(R.styleable.RangeBar_mrb_minThumbDistance, DEFAULT_MIN_DISTANCE);
+            final float bottomLabelsMargin = ta
+                    .getFloat(R.styleable.RangeBar_mrb_tickBottomLabelsMargin, DEFAULT_BOTTOM_LABEL_MARGIN);
             int tickCount = (int) ((tickEnd - tickStart) / tickInterval) + 1;
             if (isValidTickCount(tickCount)) {
 
@@ -1378,6 +1386,7 @@ public class RangeBar extends View {
                 mLeftIndex = 0;
                 mRightIndex = mTickCount - 1;
                 mDesiredMinDistance = minDistance;
+                mBottomLabelsMargin = bottomLabelsMargin;
 
                 if (mListener != null) {
                     mListener.onRangeChangeListener(this, mLeftIndex, mRightIndex,
@@ -1518,7 +1527,8 @@ public class RangeBar extends View {
                 mTickTopLabels,
                 mTickBottomLabels,
                 mTickDefaultLabel,
-                mTickLabelSize);
+                mTickLabelSize,
+                mBottomLabelsMargin);
         invalidate();
     }
 

@@ -16,6 +16,7 @@
         <attr name="mrb_barWeight" format="dimension" />
         <attr name="mrb_rangeBarColor" format="reference|color" />
         <attr name="mrb_minThumbDistance" format="float"/>
+        <attr name="mrb_tickBottomLabelsMargin" format="float" />
         <attr name="mrb_thumbSize" format="dimension" />
         <attr name="mrb_thumbBoundaryColor" format="reference|color" />
         <attr name="mrb_thumbBoundarySize" format="dimension" />

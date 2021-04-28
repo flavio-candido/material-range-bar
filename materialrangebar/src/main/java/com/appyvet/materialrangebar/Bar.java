@@ -18,7 +18,11 @@ import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
+
+import android.graphics.Typeface;
 import android.util.TypedValue;
 
 import java.util.ArrayList;
@@ -63,6 +67,8 @@ public class Bar {
     private String mTickDefaultLabel;
 
     private float mTickLabelSize;
+
+    private float mBottomLabelsMaring;
 
     private int mTickDefaultColor;
 
@@ -174,7 +180,8 @@ public class Bar {
                CharSequence[] tickTopLabels,
                CharSequence[] tickBottomLabels,
                String tickDefaultLabel,
-               float tickLabelSize) {
+               float tickLabelSize,
+               float bottomLabelsMargin) {
         this(ctx, x, y, length, tickCount, tickHeight, barWeight, barColor, isBarRounded);
 
         if (tickTopLabels != null || tickBottomLabels != null) {
@@ -188,6 +195,7 @@ public class Bar {
             mTickBottomLabels = tickBottomLabels;
             mTickDefaultLabel = tickDefaultLabel;
             mTickLabelSize = tickLabelSize;
+            mBottomLabelsMaring = bottomLabelsMargin;
         }
     }
 
@@ -223,8 +231,9 @@ public class Bar {
                CharSequence[] tickTopLabels,
                CharSequence[] tickBottomLabels,
                String tickDefaultLabel,
-               float tickLabelSize) {
-        this(ctx, x, y, length, tickCount, tickHeight, barWeight, barColor, isBarRounded, tickLabelColor, tickLabelSelectedColor, tickTopLabels, tickBottomLabels, tickDefaultLabel, tickLabelSize);
+               float tickLabelSize,
+               float bottomLabelsMargin) {
+        this(ctx, x, y, length, tickCount, tickHeight, barWeight, barColor, isBarRounded, tickLabelColor, tickLabelSelectedColor, tickTopLabels, tickBottomLabels, tickDefaultLabel, tickLabelSize, bottomLabelsMargin);
         mTickDefaultColor = tickDefaultColor;
         mTickPaint.setColor(tickDefaultColor);
     }
@@ -263,9 +272,10 @@ public class Bar {
                CharSequence[] tickTopLabels,
                CharSequence[] tickBottomLabels,
                String tickDefaultLabel,
-               float tickLabelSize) {
+               float tickLabelSize,
+               float mBottomLabelsMaring) {
 
-        this(ctx, x, y, length, tickCount, tickHeight, barWeight, barColor, isBarRounded, tickLabelColor, tickLabelSelectedColor, tickTopLabels, tickBottomLabels, tickDefaultLabel, tickLabelSize);
+        this(ctx, x, y, length, tickCount, tickHeight, barWeight, barColor, isBarRounded, tickLabelColor, tickLabelSelectedColor, tickTopLabels, tickBottomLabels, tickDefaultLabel, tickLabelSize, mBottomLabelsMaring);
 
         mTickDefaultColor = tickDefaultColor;
         mTickColors = tickColors;
@@ -373,11 +383,11 @@ public class Bar {
      * @param canvas Canvas to draw on; should be the Canvas passed into {#link
      *               View#onDraw()}
      */
-    public void drawTicks(Canvas canvas, float pinRadius, PinView rightThumb) {
-        drawTicks(canvas, pinRadius, rightThumb, null);
+    public void drawTicks(Canvas canvas, float pinRadius, PinView rightThumb, Context ctx) {
+        drawTicks(canvas, pinRadius, rightThumb, null, ctx);
     }
 
-    public void drawTicks(Canvas canvas, float pinRadius, PinView rightThumb, @Nullable PinView leftThumb) {
+    public void drawTicks(Canvas canvas, float pinRadius, PinView rightThumb, @Nullable PinView leftThumb, Context ctx) {
         boolean paintLabel = false;
         if (mLabelPaint != null) {
             paintLabel = true;
@@ -393,10 +403,10 @@ public class Bar {
 
             if (paintLabel) {
                 if (mTickTopLabels != null)
-                    drawTickLabel(canvas, getTickTopLabel(i), x, pinRadius, i == 0, false, true, rightThumb, leftThumb);
+                    drawTickLabel(canvas, getTickTopLabel(i), x, pinRadius, i == 0, false, true, rightThumb, leftThumb, ctx);
 
                 if (mTickBottomLabels != null)
-                    drawTickLabel(canvas, getTickBottomLabel(i), x, pinRadius, i == 0, false, false, rightThumb, leftThumb);
+                    drawTickLabel(canvas, getTickBottomLabel(i), x, pinRadius, i == 0, false, false, rightThumb, leftThumb, ctx);
             }
         }
         // Draw final tick. We draw the final tick outside the loop to avoid any
@@ -406,15 +416,15 @@ public class Bar {
         // Draw final tick's label outside the loop
         if (paintLabel) {
             if (mTickTopLabels != null)
-                drawTickLabel(canvas, getTickTopLabel(mNumSegments), mRightX, pinRadius, false, true, true, rightThumb, leftThumb);
+                drawTickLabel(canvas, getTickTopLabel(mNumSegments), mRightX, pinRadius, false, true, true, rightThumb, leftThumb, ctx);
 
             if (mTickBottomLabels != null)
-                drawTickLabel(canvas, getTickBottomLabel(mNumSegments), mRightX, pinRadius, false, true, false, rightThumb, leftThumb);
+                drawTickLabel(canvas, getTickBottomLabel(mNumSegments), mRightX, pinRadius, false, true, false, rightThumb, leftThumb, ctx);
         }
     }
 
     private void drawTickLabel(Canvas canvas, final String label, float x, float pinRadius,
-                               boolean first, boolean last, boolean isTop, PinView rightThumb, @Nullable PinView leftThumb) {
+                               boolean first, boolean last, boolean isTop, PinView rightThumb, @Nullable PinView leftThumb, Context ctx) {
 
         Rect labelBounds = new Rect();
         mLabelPaint.getTextBounds(label, 0, label.length(), labelBounds);
@@ -442,8 +452,10 @@ public class Bar {
         if (isTop) {
             yPos = mY - labelBounds.height() - pinRadius;
         } else {
-            yPos = mY + labelBounds.height() + pinRadius;
+            yPos = mY + labelBounds.height() + pinRadius + mBottomLabelsMaring;
         }
+
+        mLabelPaint.setTypeface(Typeface.createFromAsset(ctx.getAssets(), "prometo_medium_regular.ttf"));
 
         canvas.drawText(label, xPos, yPos, mLabelPaint);
     }
