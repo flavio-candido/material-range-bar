@@ -11,7 +11,7 @@
  * governing permissions and limitations under the License.
  */
 
-package com.appyvet.materialrangebar;
+package com.appyvet.custommaterialrangebar;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -22,7 +22,6 @@ import android.graphics.Rect;
 import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 
-import android.graphics.Typeface;
 import android.util.TypedValue;
 
 import java.util.ArrayList;

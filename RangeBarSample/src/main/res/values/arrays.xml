@@ -22,4 +22,24 @@
         <item>#070772</item>
         <item>#16C450</item>
     </string-array>
+    <string-array name="power_charging_labels">
+        <item>@string/power_charging_label_0</item>
+        <item>@string/power_charging_label_3_7</item>
+        <item>@string/power_charging_label_7_4</item>
+        <item>@string/power_charging_label_11</item>
+        <item>@string/power_charging_label_22</item>
+        <item>@string/power_charging_label_43</item>
+        <item>@string/power_charging_label_50</item>
+        <item>@string/power_charging_label_125</item>
+        <item>@string/power_charging_label_350</item>
+    </string-array>
+    <string name="power_charging_label_0">0000</string>
+    <string name="power_charging_label_3_7">3.7</string>
+    <string name="power_charging_label_7_4">7.4</string>
+    <string name="power_charging_label_11">11</string>
+    <string name="power_charging_label_22">22</string>
+    <string name="power_charging_label_43">43</string>
+    <string name="power_charging_label_50">50</string>
+    <string name="power_charging_label_125">125</string>
+    <string name="power_charging_label_350">0000</string>
 </resources>

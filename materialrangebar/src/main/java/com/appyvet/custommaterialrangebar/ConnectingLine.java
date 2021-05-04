@@ -11,7 +11,7 @@
  * governing permissions and limitations under the License.
  */
 
-package com.appyvet.materialrangebar;
+package com.appyvet.custommaterialrangebar;
 
 import android.graphics.Canvas;
 import android.graphics.LinearGradient;
@@ -19,7 +19,6 @@ import android.graphics.Paint;
 import android.graphics.Shader;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Class representing the blue connecting line between the two thumbs.
