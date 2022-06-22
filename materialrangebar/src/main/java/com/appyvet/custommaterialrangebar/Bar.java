@@ -73,6 +73,10 @@ public class Bar {
 
     private List<Integer> mTickColors = new ArrayList<>();
 
+    private int firstLabelBoundHeight;
+
+    private boolean isFirstLabelBoundHeightSaved = false;
+
     // Constructor /////////////////////////////////////////////////////////////
 
     /**
@@ -447,16 +451,29 @@ public class Bar {
             mLabelPaint.setColor(mTickLabelColor);
         }
 
+        if(!isFirstLabelBoundHeightSaved) {
+            saveFirstLabelBoundHeight(labelBounds.height());
+        }
+
         float yPos;
         if (isTop) {
             yPos = mY - labelBounds.height() - pinRadius;
         } else {
-            yPos = mY + labelBounds.height() + pinRadius + mBottomLabelsMaring;
+            yPos = mY + getFirstLabelBoundHeight() + pinRadius + mBottomLabelsMaring;
         }
 
         mLabelPaint.setTypeface(ResourcesCompat.getFont(ctx, R.font.prometo_medium_regular));
 
         canvas.drawText(label, xPos, yPos, mLabelPaint);
+    }
+
+    private void saveFirstLabelBoundHeight(int height) {
+        firstLabelBoundHeight = height;
+        isFirstLabelBoundHeightSaved = true;
+    }
+
+    private int getFirstLabelBoundHeight() {
+        return firstLabelBoundHeight;
     }
 
     private Paint getTick(int index) {
